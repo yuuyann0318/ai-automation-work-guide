@@ -1,0 +1,12 @@
+@media print{
+  .visual{grid-template-columns:1fr 1fr!important;gap:5mm!important}
+  .visual figure{break-inside:avoid!important}
+  .visual img{width:100%!important;max-height:85mm!important;object-fit:cover!important}
+  .prompt{margin:3mm 0!important;padding:4mm!important;line-height:1.35!important}
+  .copybox{line-height:1.35!important}
+  .batch{margin:2mm 0!important;padding:4mm!important}
+  .batch-flow{margin:3mm 0!important}
+  .batch-flow div{padding:2mm!important}
+  .finish{display:block!important;margin:6mm 0 0!important;padding:5mm!important;break-inside:avoid!important}
+  .finish .download{display:none!important}
+}
