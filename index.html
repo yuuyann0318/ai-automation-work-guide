@@ -1,52 +1,386 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:,"><title>AI×自動化ワークの始め方</title><meta name="description" content="架空の商品5件をAIへまとめて渡し、下書きと確認事項を5列へそろえる練習です。"><style>
-@media print{.table-wrap{display:none!important}.mobile-products{display:grid!important;grid-template-columns:1fr 1fr;gap:8mm;break-inside:avoid!important}.product-card{font-size:12pt;break-inside:avoid}.product-card dt{font-size:11pt}.prompt-details{break-inside:auto}.prompt-details>summary{display:none}.keep-group,.pc-files,.before-after,.roles{break-inside:avoid!important}h2,h3{break-after:avoid}p,li{orphans:3;widows:3}}
-.mobile-products{display:none}.product-card{background:#f4f8f6;border:1px solid var(--line);border-left:6px solid var(--teal);border-radius:12px;padding:16px}.product-card h3{margin:0 0 8px}.product-card dl{margin:0}.product-card dt{font-weight:900;color:var(--teal);margin-top:9px}.product-card dd{margin:0}.prompt-details{margin-top:8px}.prompt-details summary{cursor:pointer;font-weight:900;padding:12px 0}.copy-status{display:block;min-height:1.8em;font-weight:800}.copy-help{font-size:14px;margin:.2em 0 0}@media(max-width:720px){.table-wrap{display:none!important}.mobile-products{display:grid;gap:12px}}@media print{.copy-status,.copy-help{display:none!important}.card{break-inside:auto!important}.roles{grid-template-columns:1fr 1fr!important;break-inside:avoid!important}.prompt{font-size:10.5pt;line-height:1.55}}
-:root{--ink:#172a2a;--paper:#f3f1e9;--card:#fffdf7;--teal:#075b5c;--orange:#d96b31;--line:#c9d3cf;--soft:#e1ece8}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;line-height:1.8}a{color:var(--teal)}.wrap{width:min(100% - 32px,1100px);margin:auto}.hero{padding:44px 0 24px;display:grid;grid-template-columns:1.05fr .95fr;gap:30px;align-items:center}.hero img{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:20px}.eyebrow{font-weight:900;color:var(--orange);letter-spacing:.08em}.hero h1{font-size:clamp(34px,6vw,68px);line-height:1.1;margin:.2em 0}.hero p{font-size:clamp(17px,2vw,22px)}section{margin:28px 0}.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:clamp(20px,4vw,40px)}h2{font-size:clamp(27px,4vw,42px);line-height:1.25;margin-top:0}h3{font-size:22px;margin-top:28px}.roles,.flow,.checks{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}.role{border-top:7px solid var(--teal);background:var(--soft);padding:20px;border-radius:12px}.role.human{border-color:var(--orange);background:#f6e8dc}.flow{grid-template-columns:1fr auto 1fr;align-items:stretch}.flow .box{background:var(--card);border:2px solid var(--teal);border-radius:14px;padding:18px}.flow .arrow{align-self:center;color:var(--orange);font-size:35px;font-weight:900}.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px}table{width:100%;min-width:850px;border-collapse:collapse;background:#fff}th,td{padding:12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}th{background:var(--teal);color:white}.prompt{white-space:pre-wrap;background:#173132;color:white;padding:20px;border-radius:14px;font:14px/1.7 ui-monospace,SFMono-Regular,Menlo,monospace}.copy,.download{display:inline-flex;align-items:center;justify-content:center;min-height:50px;border:0;border-radius:10px;background:var(--orange);color:white;text-decoration:none;font-weight:900;padding:10px 18px;margin:8px 8px 8px 0;cursor:pointer}.download.alt{background:var(--teal)}.before-after{display:grid;grid-template-columns:1fr 1fr;gap:16px}.bad,.good{padding:20px;border-radius:14px}.bad{background:#f4e0dc;border-left:8px solid #9d3f32}.good{background:var(--soft);border-left:8px solid var(--teal)}.steps{counter-reset:s}.steps li{list-style:none;position:relative;padding:0 0 24px 48px}.steps li:before{counter-increment:s;content:counter(s);position:absolute;left:0;top:0;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--orange);color:white;font-weight:900}.note{font-size:14px;color:#4f5b59}.cover{width:100%;border-radius:14px}.pc-files{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.file{background:var(--soft);padding:16px;border-radius:10px;font-weight:700;overflow-wrap:anywhere}.checklist li{margin:.5em 0}.footer{padding:32px 0 56px}.back{display:inline-block;background:var(--teal);color:white;text-decoration:none;padding:12px 18px;border-radius:10px;font-weight:800}@media(max-width:720px){.wrap{width:min(100% - 24px,1100px)}.hero{grid-template-columns:1fr;padding-top:26px}.roles,.checks,.before-after{grid-template-columns:1fr}.flow{grid-template-columns:1fr}.flow .arrow{text-align:center;transform:rotate(90deg)}.pc-files{grid-template-columns:1fr}.card{border-radius:15px}}@media print{body{background:#fff}.hero{display:block}.hero img,.copy{display:none}.card{break-inside:avoid}.download{color:#000;background:none;border:1px solid #000}}
-</style></head><body><main class="wrap"><header class="hero"><div><p class="eyebrow">AI×自動化ワークの始め方</p><h1>5件分の文章を、<br>1回の依頼で下書きに。</h1><p>AIに任せるのは、資料を読み、下書きと確認事項をそろえる所まで。人が元資料と照合して、使ってよい文章か決めます。</p></div><div><img src="assets/display/04-ai-automation-work-v7.jpg" alt="商品情報をAIで整理する作業机"><p class="note">表紙画像はイメージです</p></div></header>
-<section class="card"><h2>「まとめて頼みたい。でも、書いていないことまで足されたら怖い」</h2><p>このワークでは、架空の商品データ5件をAIへ渡し、商品説明の下書きと確認事項をまとめて受け取ります。最後は元の資料と見比べ、間違いを1件直します。</p><div class="roles"><article class="role"><h3>AIがすること</h3><ul><li>5件の資料を読む</li><li>説明を下書きする</li><li>未確認を分け、5列へそろえる</li></ul></article><article class="role human"><h3>人がすること</h3><ul><li>元資料と照合する</li><li>間違いを直す</li><li>公開・送信を判断する</li><li>契約や顧客対応を行う</li></ul></article></div><p><b>契約、顧客への送信、公開、事実の最終判断までを無人にする教材ではありません。</b></p></section>
-<section class="card"><h2>先に、5件そろった完成見本を見てください。</h2><img class="cover" src="assets/display/batch-products-v1.jpg" alt="架空商品5件の資料が一括処理へ集まるイメージ"><p class="note">画像はイメージです。実際の完成表は下に表示しています。</p><div class="table-wrap"><table><thead><tr><th>商品ID</th><th>商品名</th><th>説明の下書き</th><th>内容・仕様</th><th>確認事項</th></tr></thead><tbody>
-<tr><td>P-001</td><td>窓辺のバジル栽培セット</td><td>室内向けのバジル栽培セットです。日当たりのよい窓辺で育てます。</td><td>鉢1個／培養土1袋／種1袋／育て方カード1枚</td><td>鉢の実寸／種の量／返品条件</td></tr>
-<tr><td>P-002</td><td>ハーブティー入門セット</td><td>カモミール、ミント、レモングラスの3袋をまとめた入門セットです。</td><td>3袋</td><td>各袋の内容量／賞味期限／保存方法</td></tr>
-<tr><td>P-003</td><td>木のスプーン2本組</td><td>天然木の食器用スプーン2本組です。手洗いを案内します。</td><td>天然木のスプーン2本</td><td>樹種／全長／食洗機の可否</td></tr>
-<tr><td>P-004</td><td>コットン巾着</td><td>生成り色の小物入れ用巾着です。</td><td>1枚</td><td>寸法／生地の混率／洗濯方法</td></tr>
-<tr><td>P-005</td><td>朝のメモ帳</td><td>深い緑の表紙を使った、方眼40ページのメモ帳です。</td><td>1冊／方眼40ページ／表紙は深い緑</td><td>本体寸法／紙の種類／製造国</td></tr>
-</tbody></table></div><div class="mobile-products" aria-label="商品5件の完成見本">
-<article class="product-card"><h3>P-001 窓辺のバジル栽培セット</h3><dl><dt>説明の下書き</dt><dd>室内向けのバジル栽培セットです。日当たりのよい窓辺で育てます。</dd><dt>内容・仕様</dt><dd>鉢1個／培養土1袋／種1袋／育て方カード1枚</dd><dt>確認事項</dt><dd>鉢の実寸／種の量／返品条件</dd></dl></article>
-<article class="product-card"><h3>P-002 ハーブティー入門セット</h3><dl><dt>説明の下書き</dt><dd>カモミール、ミント、レモングラスの3袋をまとめた入門セットです。</dd><dt>内容・仕様</dt><dd>3袋</dd><dt>確認事項</dt><dd>各袋の内容量／賞味期限／保存方法</dd></dl></article>
-<article class="product-card"><h3>P-003 木のスプーン2本組</h3><dl><dt>説明の下書き</dt><dd>天然木の食器用スプーン2本組です。手洗いを案内します。</dd><dt>内容・仕様</dt><dd>天然木のスプーン2本</dd><dt>確認事項</dt><dd>樹種／全長／食洗機の可否</dd></dl></article>
-<article class="product-card"><h3>P-004 コットン巾着</h3><dl><dt>説明の下書き</dt><dd>生成り色の小物入れ用巾着です。</dd><dt>内容・仕様</dt><dd>1枚</dd><dt>確認事項</dt><dd>寸法／生地の混率／洗濯方法</dd></dl></article>
-<article class="product-card"><h3>P-005 朝のメモ帳</h3><dl><dt>説明の下書き</dt><dd>深い緑の表紙を使った、方眼40ページのメモ帳です。</dd><dt>内容・仕様</dt><dd>1冊／方眼40ページ／表紙は深い緑</dd><dt>確認事項</dt><dd>本体寸法／紙の種類／製造国</dd></dl></article>
-</div><p>AIの返し方は毎回同じとは限りません。5件そろい、元資料にない情報を事実として足していないことが完成条件です。</p></section>
-<section class="card"><h2>入力は4列。AIの下書きは5列。</h2><p>CSVは、商品名や説明を表の形で保存する形式です。今回は「商品ID／商品名／確認済み内容／未確認項目」の4列を渡し、「商品ID／商品名／説明の下書き／内容・仕様／確認事項」の5列へ分けます。</p><div class="flow"><div class="box"><b>入力CSV・4列</b><p>5件の確認済み内容と未確認項目</p></div><div class="arrow">→</div><div class="box"><b>AIの下書き・5列</b><p>説明と仕様を分け、未確認は確認事項へ</p></div></div><a class="download alt" href="assets/practice-products.csv" download>練習CSVを保存</a></section>
-<section class="card"><h2>スマホで、5件を1回で頼みます。</h2><p>目的は、架空の商品5件を同じ5列の下書きへそろえることです。ChatGPTで新しいチャットを開き、全文をコピーして送ります。</p><button class="copy" data-copy="prompt">全文をコピー</button><span class="copy-status" role="status"></span><p class="copy-help">コピーできない時は、下の「全文を見る」を開き、長押しして選択します。</p><details class="prompt-details"><summary>全文を見る・入力CSVを確認する</summary><div class="prompt" id="prompt">次の架空の商品データ5件を読み、商品説明の下書きをまとめてください。
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AI×自動化ワークの始め方</title><style>
+:root{--ink:#17202a;--muted:#52606d;--paper:#fff;--soft:#f3f5f6;--a:#155e75;--b:#c45d36;--line:#b8c4ca}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--ink);background:var(--paper);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;font-size:18px;line-height:1.8}a{color:var(--a);text-underline-offset:3px}button,.btn,summary{min-height:48px;font:inherit}.pdf-only{display:none}.wrap{width:min(1100px,calc(100% - 40px));margin:auto}.hero{padding:72px 0 52px;background:var(--soft);border-bottom:5px solid var(--a)}.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center}.eyebrow{font-weight:800;color:var(--a);letter-spacing:.08em}.hero h1{font-size:clamp(36px,6vw,68px);line-height:1.13;margin:.15em 0;overflow-wrap:normal;word-break:keep-all}.hero img{width:100%;display:block;border-radius:6px;aspect-ratio:4/3;object-fit:cover}.notice,figcaption{font-size:14px;color:var(--muted);margin-top:8px}.actions{display:flex;gap:12px;flex-wrap:wrap;margin:24px 0}.btn,button.primary{display:inline-flex;align-items:center;justify-content:center;border:0;border-radius:4px;background:var(--a);color:#fff;padding:11px 22px;font-weight:800;text-decoration:none;cursor:pointer}.btn.alt{background:var(--b)}.btn.secondary{background:transparent;color:var(--a);border:1px solid var(--a);font-weight:700}main{padding:28px 0 80px}section.content{padding:34px 0;border-bottom:1px solid #d9dfe3}h2{font-size:clamp(28px,4vw,42px);line-height:1.35;margin:1.4em 0 .55em;border-left:7px solid var(--a);padding-left:16px}h3{font-size:clamp(22px,3vw,30px);line-height:1.45;margin:1.5em 0 .45em}h4{font-size:20px}.flow{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:28px 0}.flow div{background:var(--soft);padding:16px 12px;border-top:4px solid var(--a);font-weight:700}.flow b{display:block;color:var(--a);font-size:14px}.tablewrap{overflow-x:auto;margin:24px 0}table{border-collapse:collapse;width:100%;min-width:600px}th,td{border:1px solid #bbc5cc;padding:12px;text-align:left;vertical-align:top}th{background:var(--ink);color:#fff}.codebox{position:relative;margin:22px 0}.copy{position:absolute;right:8px;top:8px;border:1px solid #ccd3d7;background:#fff;border-radius:4px;padding:5px 12px;z-index:2}pre{overflow:auto;background:#111b24;color:#f5f7f8;padding:58px 20px 20px;border-radius:5px;font-size:15px;line-height:1.6;white-space:pre-wrap}code{overflow-wrap:anywhere}details{border:1px solid #bcc6cc;padding:14px 18px;margin:20px 0}summary{font-weight:800;cursor:pointer;padding:8px 0}.appendix{background:#f7f8f8}video{width:100%;display:block;background:#111;max-height:620px}.video-stage{background:#111;padding:12px;margin:24px 0}.quiz{max-width:780px;margin:30px auto}.progress{height:8px;background:#dce2e5}.progress i{display:block;height:100%;background:var(--a)}.choice{display:block;width:100%;text-align:left;border:2px solid #c7d0d5;background:#fff;border-radius:4px;padding:14px 16px;margin:10px 0}.choice[aria-pressed=true]{border-color:var(--a);background:#eaf5f4}.quiz-nav{display:flex;justify-content:space-between;gap:10px;margin-top:20px}.error{color:#a32828;font-weight:700}.result{background:var(--soft);padding:24px;border-top:6px solid var(--a);margin:24px 0}.result img{width:100%;max-height:400px;object-fit:cover}.chips{display:flex;flex-wrap:wrap;gap:8px}.chips span{border:1px solid #9eadb5;padding:6px 11px;border-radius:999px;font-size:15px}
+.cover-outcomes{display:none}.visual{margin:30px 0;padding:22px;background:#fff;border:1px solid var(--line);border-top:5px solid var(--a);border-radius:4px}.visual b,.visual strong{display:block}.visual i{font-style:normal;color:var(--b);font-weight:900;text-align:center}.visual small{color:var(--muted)}.track-row{display:flex;align-items:stretch;gap:16px;overflow-x:auto;padding:4px;counter-reset:steps}.track .node{position:relative;min-width:150px;flex:1;padding:16px 12px;background:var(--soft);border-bottom:3px solid var(--a);font-weight:700;text-align:center;line-height:1.45;counter-increment:steps;word-break:keep-all}.track .node::before{content:counter(steps);display:block;color:var(--a);font-size:14px}.track .node:not(:last-child)::after{content:'→';position:absolute;right:-14px;top:50%;transform:translateY(-50%);color:var(--b);font-size:22px;z-index:2}.commerce-map{display:grid;gap:14px}.commerce-phase{display:grid;grid-template-columns:120px 1fr;gap:14px;align-items:stretch}.commerce-phase>b{display:flex;align-items:center;justify-content:center;background:var(--ink);color:#fff;padding:14px;text-align:center;word-break:keep-all}.commerce-phase>div{display:grid;grid-template-columns:repeat(5,1fr);gap:18px}.commerce-phase .node{position:relative;background:var(--soft);border-bottom:3px solid var(--a);padding:14px 8px;text-align:center;font-weight:700;word-break:keep-all}.commerce-phase .node:not(:last-child)::after{content:'→';position:absolute;right:-15px;color:var(--b);top:40%;font-size:22px}.visual-scene{position:relative}.visual-scene>img{width:100%;max-height:560px;object-fit:cover;border-radius:2px}.overlay-flow{display:flex;align-items:center;justify-content:center;gap:14px;background:var(--ink);color:#fff;padding:14px;margin-top:-4px}.overlay-flow span{color:var(--b);font-size:24px}.deliverables{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:12px}.deliverables span{padding:10px;background:var(--soft);text-align:center;font-weight:700}.matrix-head,.matrix-row{display:grid;grid-template-columns:1fr 1.25fr 1.4fr 1.2fr;gap:1px;background:var(--line)}.matrix-head>*{background:var(--ink);color:#fff;padding:10px}.matrix-row>*{background:#fff;padding:11px}.matrix-row:nth-child(odd)>*{background:var(--soft)}.visual-pair{display:grid;grid-template-columns:1fr 40px 1fr;gap:14px;align-items:center}.visual-pair>div{min-width:0}.visual-pair>div:nth-of-type(3){grid-column:1/-1}.visual-pair img{width:100%;max-height:320px;object-fit:cover}.meeting-before-after{display:grid!important;grid-template-columns:1fr 40px 1fr;gap:14px;align-items:center}.meeting-before-after section{background:var(--soft);padding:16px}.meeting-before-after dl{display:grid;grid-template-columns:auto 1fr;margin:8px 0}.meeting-before-after dt{font-weight:800;color:var(--a)}.meeting-before-after dd{margin:0 0 4px 10px}.before-after,.edit-lane,.data-use,.column-map,.folder-map{display:flex;gap:18px;align-items:center}.before-after>div,.edit-lane>div,.data-use>div,.column-map>div,.folder-map>div{flex:1;background:var(--soft);padding:18px}.before-after span,.edit-lane span,.column-map span,.data-use span{display:block;padding:5px 0}.compare,.output-files,.environment{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}.compare>div,.output-files>div,.environment>div{padding:20px;background:var(--soft);border-left:5px solid var(--a)}.compare strong,.output-files b,.environment strong{font-size:22px;margin:8px 0}.actual-compare>div{display:grid;gap:10px}.paper{background:#fff;border:1px solid var(--line);padding:14px}.paper span{display:block;border-bottom:1px solid var(--line);padding:4px}.final-paper{border-left:5px solid var(--a)}.file-flow{display:grid;grid-template-columns:1.1fr .7fr 1.5fr .25fr .8fr;gap:14px;align-items:center}.file-group,.split-output,.human-check{background:var(--soft);padding:18px}.file-group code,.file-group small,.split-output span,.split-output code,.human-check span{display:block;margin:6px 0}.split-output span{border-bottom:1px solid var(--line);padding:6px 0}.output-files{grid-template-columns:repeat(3,1fr)}.output-files code{font-size:13px;display:block;overflow-wrap:anywhere}.mini-table{display:grid;gap:5px}.mini-table span{background:#fff;border:1px solid var(--line);padding:6px}.ui-guide>div{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.ui-guide span{background:var(--soft);padding:14px;text-align:center}.truth-compare{display:grid;grid-template-columns:1fr 1fr;gap:18px}.truth-compare>div{padding:20px}.truth-compare .bad{background:#fbeeee;border-left:5px solid #a33}.truth-compare .good{background:#eaf5f1;border-left:5px solid var(--a)}.truth-compare p{grid-column:1/-1;background:var(--soft);padding:12px}.meeting-map{display:grid;grid-template-columns:auto auto repeat(4,1fr) auto 1.4fr;align-items:center;gap:8px;margin-top:12px}.meeting-map>*{background:var(--soft);padding:10px;text-align:center}.role-map{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;text-align:center}.role-map>div{background:var(--soft);padding:18px}.role-map span{display:block;padding:4px}.role-map>i,.role-map>strong,.role-map>em{grid-column:1/-1}.role-map>strong{font-size:26px}.role-map>em{font-style:normal;color:var(--a);font-weight:800}.environment{grid-template-columns:repeat(3,1fr)}.environment span{display:block}.environment .ok{background:#eaf5f1}.install-flow{display:grid;grid-template-columns:1fr 40px 1fr 40px 1fr;gap:10px;align-items:center}.install-flow>div{background:var(--soft);padding:16px}.install-flow .branch{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:12px;background:#fff}.install-flow .branch span{padding:14px;border:1px solid var(--line)}.actual-assets{display:grid;grid-template-columns:1.5fr 40px 1fr;align-items:center;gap:14px}.actual-assets>div:first-child{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.actual-assets img{width:100%;aspect-ratio:9/16;object-fit:cover}.actual-assets b{grid-column:1/-1}.subtitle-compare{display:grid;grid-template-columns:1fr 40px 1fr;gap:14px;align-items:center}.subtitle-compare>div{background:var(--ink);color:#fff;padding:16px;text-align:center}.subtitle-compare img{width:100%;max-height:480px;object-fit:cover;object-position:center 80%}.subtitle-compare strong{font-size:18px}.subtitle-compare ul{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;list-style:none;padding:0}.subtitle-compare li{background:var(--soft);padding:10px;text-align:center;font-weight:700}.folder-map code{display:block;background:#fff;border:1px solid var(--line);padding:6px;margin:5px 0}.completion-card .completion-info{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}.completion-info b{grid-column:1/-1;font-size:28px}.completion-info span{background:var(--soft);padding:10px}.condition-sheet{text-align:center}.condition-sheet>div{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin:12px 0}.condition-sheet span{background:var(--soft);padding:12px 6px;font-weight:700}.condition-sheet>strong{display:inline-block;font-size:22px;border-bottom:4px solid var(--a);padding:8px 18px}
+@media(max-width:760px){body{font-size:18px}.wrap{width:min(100% - 28px,1100px)}.hero{padding:42px 0 34px}.hero-grid{grid-template-columns:1fr;gap:24px}.flow{grid-template-columns:1fr}.actions>.btn{width:100%}h2{padding-left:12px}.quiz{margin-top:16px}.visual{padding:16px;margin:24px 0}.track-row{flex-direction:column;overflow:visible}.track .node{min-width:0}.track .node:not(:last-child)::after{content:'↓';right:auto;top:auto;bottom:-20px;left:50%;transform:translateX(-50%)}.commerce-phase{grid-template-columns:1fr}.commerce-phase>div{grid-template-columns:1fr}.commerce-phase .node:not(:last-child)::after{content:'↓';right:auto;top:auto;bottom:-17px;left:50%}.overlay-flow{align-items:stretch;flex-direction:column}.overlay-flow span{transform:rotate(90deg);line-height:1}.deliverables{grid-template-columns:1fr 1fr}.matrix-head{display:none}.matrix-row{grid-template-columns:1fr 1fr}.matrix-row>*:nth-child(3),.matrix-row>*:nth-child(4){grid-column:span 1}.matrix-row b{grid-column:1/-1;background:var(--ink)!important;color:#fff}.visual-pair{grid-template-columns:1fr}.visual-pair>i{transform:rotate(90deg)}.visual-pair>div:nth-of-type(3){grid-column:auto}.meeting-before-after{grid-template-columns:1fr!important}.before-after,.edit-lane,.data-use,.column-map,.folder-map{flex-direction:column;align-items:stretch}.file-flow{grid-template-columns:1fr}.file-flow>i{transform:none}.compare,.output-files,.environment{grid-template-columns:1fr}.ui-guide>div{grid-template-columns:1fr}.meeting-map{grid-template-columns:1fr 1fr}.meeting-map>*{grid-column:auto}.role-map{grid-template-columns:1fr}.role-map>i,.role-map>strong,.role-map>em{grid-column:1}.install-flow{grid-template-columns:1fr}.install-flow .branch{grid-column:1;grid-template-columns:1fr}.actual-assets{grid-template-columns:1fr}.actual-assets>i{transform:rotate(90deg)}.subtitle-compare{grid-template-columns:1fr}.subtitle-compare ul{grid-column:1;grid-template-columns:1fr}.subtitle-compare>i{transform:rotate(90deg)}.completion-card .completion-info{grid-template-columns:1fr}.condition-sheet>div{grid-template-columns:1fr 1fr}}
+@media print{@page{size:A4;margin:13mm 12mm}body{font-size:12.5pt;line-height:1.52}main{padding:0}.wrap{width:auto}.hero{height:297mm;margin:-13mm -12mm 0;padding:22mm 23mm;display:flex;align-items:stretch;break-after:page}.hero-grid{width:100%;grid-template-columns:1fr;gap:7mm;align-content:center}.hero figure{max-width:none;margin:0}.hero img{aspect-ratio:16/9;max-height:104mm}.hero h1{font-size:31pt}.hero p{font-size:13.5pt}.cover-outcomes{display:grid;grid-template-columns:repeat(3,1fr);gap:4mm}.cover-outcomes span{background:#fff;border-top:4px solid var(--a);padding:4mm 2mm;text-align:center;font-weight:800}.btn,.copy,.quiz,.no-print,.video-stage{display:none!important}details{border:0;padding:0}details>*{display:block!important}summary{display:none}h2,h3,h4{break-after:avoid}h2{font-size:24pt}h3{font-size:18.5pt}h4{font-size:14.5pt}h2+*,h3+*,h4+*{break-before:avoid}.keep-group{break-inside:avoid}img,video,.flow,.tablewrap,blockquote,pre,.visual{break-inside:avoid}.break-after{break-after:page}section.content{padding:4mm 0}pre{font-size:9pt}.pdf-only{display:block!important}.pdf-complete{break-inside:avoid}.pdf-complete img{width:100%;max-height:145mm;object-fit:contain}.visual{padding:4mm;margin:5mm 0}.visual-scene>img{max-height:100mm}.track-row{gap:2mm}.track .node{min-width:20mm;padding:3mm 1.5mm;font-size:10pt}.track .node:not(:last-child)::after{right:-2.5mm}.commerce-map{gap:4mm}.commerce-phase{grid-template-columns:28mm 1fr;gap:3mm}.commerce-phase>div{gap:4mm}.commerce-phase .node{padding:3mm 1mm;font-size:10pt}.visual figcaption{font-size:9.5pt}.visual-pair img{max-height:48mm}.meeting-before-after section{padding:3mm;font-size:10pt}.overlay-flow{padding:2mm}.condition-sheet span{padding:2mm;font-size:9pt}.completion-card .completion-info{font-size:10pt}.subtitle-compare img{max-height:78mm}}
 
-【作業ルール】
-・「確認済み内容」だけを事実として使う
-・「未確認項目」は推測で埋めず、確認事項へ残す
+.three-stage{display:grid;grid-template-columns:1fr 36px 1fr 36px 1fr;gap:12px;align-items:center}.three-stage>div{min-width:0;background:var(--soft);padding:18px}.three-stage span{display:block;padding:5px 0}.three-stage figcaption{grid-column:1/-1}
+@media(max-width:760px){.three-stage{grid-template-columns:1fr}.three-stage>i{transform:rotate(90deg)}.three-stage figcaption{grid-column:1}}
+@media print{#診断{display:none!important}h2[id^="結果"]{break-before:auto}.three-stage{grid-template-columns:1fr 8mm 1fr 8mm 1fr;gap:2mm}.three-stage>div{padding:3mm;font-size:10pt}.tablewrap{break-inside:auto!important}tr{break-inside:avoid}.file-flow{grid-template-columns:1.1fr .85fr 1.35fr .2fr .8fr}.file-flow>i{word-break:keep-all;font-size:10pt}.meeting-scene>img{max-height:60mm}.data-use,.column-map{flex-direction:row!important;align-items:center!important}.edit-lane{display:grid;grid-template-columns:1fr 7mm 1fr 7mm 1fr 7mm 1fr;gap:2mm;align-items:center}.edit-lane>div{padding:3mm;font-size:10pt;min-width:0}.edit-lane>i{transform:none!important}.edit-lane figcaption{grid-column:1/-1}.actual-assets img{max-height:65mm;aspect-ratio:auto!important;object-fit:cover}pre{font-size:8.8pt;line-height:1.35;padding:4mm}h3[id="Codexへ送る字幕修正文"]{margin-top:3mm}h3[id="Codexへ送る字幕修正文"]+div pre{font-size:8.3pt;line-height:1.25;padding:3mm}h3[id="仕事の準備"]+ul,h3[id="人が行う所"]+ul{break-inside:avoid}h2[id="今日の行動"],h3[id="Codexへ自然な文で頼む"],h3[id="素材を守る"]{break-before:page}h3[id="素材を守る"]~h2[id="今日の行動"]{break-before:auto}details.appendix{font-size:12pt;line-height:1.45}details.appendix p{margin:.65em 0}}
+</style></head><body><header class="hero"><div class="wrap hero-grid"><div><p class="eyebrow">事務・情報整理を仕事にする</p><h1>AI×自動化ワークの<wbr><span style="white-space:nowrap">始め方</span></h1><p>依頼主から受け取った情報を整え、確認・納品する所まで分かります。</p><div class="actions"><a class="btn" href="assets/AI自動化_実践キット.zip" download>実践キットZIPを保存</a><a class="btn alt" href="assets/AI自動化_保存版.pdf" download>保存版PDFを保存</a></div></div><figure><img src="assets/display/product-data-workflow-v1.png" alt="店主と作業者が商品情報の完成表を確認する場面"><figcaption class="notice">画像はイメージです</figcaption></figure><div class="cover-outcomes"><span>仕事の仕組み</span><span>実物キット</span><span>応募から納品</span></div></div></header><main class="wrap"><section class="content"><h3 id="ばらばらの情報を-仕事で使える資料へ整える">ばらばらの情報を、仕事で使える資料へ整える</h3>
+<p>ネットショップには、商品情報を5件、10件と同じ形へそろえる仕事があります。</p>
+<p>会社や個人事業主には、会議メモから「決まったこと」「担当」「期限」を分ける仕事があります。</p>
+<p>依頼主は、元資料と照合され、次の仕事に使える表やメモを受け取るために依頼します。</p>
+<p>この特典では、2つの仕事を見ます。</p>
+<ol>
+<li>架空の商品5件を、同じ5列の表へ整える</li>
+<li>架空の会議メモを、決定・担当・期限・未決定へ分ける</li>
+</ol>
+<p>そのあと、仕事の探し方、応募、条件確認、納品までつなげます。</p>
+<figure class="visual visual-pair break-after"><div><img src="assets/display/01-messy-inquiry-notes.jpg" alt="5件の商品情報がばらばらに書かれた紙"><b>商品情報がばらばら</b></div><i>→</i><div><img src="assets/display/02-organized-review-board.jpg" alt="商品ごとの確認済み情報と確認事項をそろえた表"><b>同じ列の完成表</b></div><div class="meeting-before-after"><section><b>架空の会議メモ</b><p>11月9日10時開始<br>定員は未決定<br>告知画像の初稿はXさん、11月2日まで<br>申込フォームはYさん、11月3日まで<br>持ち物は講師へ確認が必要</p></section><i>→</i><section><b>次に動けるメモ</b><dl><dt>決定</dt><dd>11月9日10時開始</dd><dt>担当</dt><dd>Xさん／Yさん</dd><dt>期限</dt><dd>11月2日／3日</dd><dt>未決定</dt><dd>定員・持ち物</dd></dl></section></div><figcaption>架空例。左の情報だけを使い、決定・担当・期限・未決定へ整理します。商品画像はイメージです</figcaption></figure>
+<h3 id="依頼から報酬まで-1本で見る">依頼から報酬まで、1本で見る</h3>
+<p>架空のネットショップ「みどり商店」を例にします。</p>
+<p>店主は商品を5件登録したいのですが、情報がメモごとに分かれています。商品名、内容、注意事項、未確認項目を同じ表にしたい。そこで、事務・情報整理を頼みます。</p>
+<div class="keep-group"><h4 id="依頼主が有償で頼む作業">依頼主が有償で頼む作業</h4><ul>
+<li>5商品の元資料を読む</li>
+<li>指定された5列へそろえる</li>
+<li>資料にない内容を作らない</li>
+<li>未確認のことを確認事項へ残す</li>
+<li>CSV（表のデータを保存するファイル）で納品する</li>
+</ul></div>
+<div class="keep-group"><h4 id="受け取る材料">受け取る材料</h4><ul>
+<li>商品IDと商品名の一覧</li>
+<li>5商品の事実メモ</li>
+<li>必要な列と書き方</li>
+<li>納品形式、期限、修正条件</li>
+</ul></div>
+<div class="keep-group"><h4 id="納品する物">納品する物</h4><ul>
+<li>5行×5列のCSVファイル</li>
+<li>依頼主へ確認する項目の一覧</li>
+</ul></div>
+<p>店主は、確認事項を埋めたあと、商品登録の元資料として使います。商品登録とお客さまへの連絡は、店主が内容を確定してから進めます。</p>
+<figure class="visual track result-flow break-after"><div class="track-row"><div class="node">店主<br><small>登録準備が進まない</small></div><div class="node">商品名の一覧<br>＋<br>商品の事実メモ</div><div class="node">キットで<br>自動整理</div><div class="node">人が5件を照合</div><div class="node">完成表<br>＋<br>確認事項</div><div class="node">店主が<br>商品登録に利用</div></div><figcaption>資料を自動で並べたあと、人が元資料と全件照合して渡します。</figcaption></figure>
+<h3 id="仕事の流れ">仕事の流れ</h3>
+<p>クラウドワークスの固定報酬制プロジェクトを使う架空例です。</p>
+<ol>
+<li>「商品データ 整理」「オンラインアシスタント 情報整理」で募集を探す</li>
+<li>件数、必要な列、元資料、期限、納品形式、AI利用を読む</li>
+<li>自主制作の見本と、できる範囲を書いて応募する</li>
+<li>依頼主と作業範囲、修正、報酬を合意する</li>
+<li>契約後、依頼主が報酬を先に預ける「仮払い」を確認してから着手する</li>
+<li>元資料を受け取り、AIへ渡せる情報か確認する</li>
+<li>キットで商品IDを結び、5列と確認リストへ自動整理する</li>
+<li>人が5件とも元資料と照合し、最初の確認用に作った版「初稿」を渡す</li>
+<li>合意した範囲を修正して納品する</li>
+<li>依頼主が納品物を確認する「検収」のあと、報酬を受け取る</li>
+</ol>
+<p>依頼形式によって流れは違います。利用するサービスの公式案内と、実際の契約条件を確認してください。</p>
+<figure class="visual commerce-map"><div class="commerce-phase"><b>受注前</b><div><div class="node">募集</div><div class="node">応募</div><div class="node">条件合意</div><div class="node">仮払い確認</div></div></div><div class="commerce-phase"><b>制作</b><div><div class="node">資料受取</div><div class="node">自動整理</div><div class="node">人が照合</div><div class="node">初稿</div><div class="node">修正</div></div></div><div class="commerce-phase"><b>納品と支払</b><div><div class="node">CSV納品</div><div class="node">検収</div><div class="node">報酬受取</div></div></div><figcaption>上から順に進みます。キットを使うのは「自動整理」の工程です。</figcaption></figure>
+<h3 id="文章作成-商品紹介文-の仕事と-何が違う">文章作成（商品紹介文）の仕事と、何が違う？</h3>
+<p>文章作成（商品紹介文）は、1つの商品を読みやすく伝える仕事です。</p>
+<p>事務・情報整理は、複数件を同じ項目と基準へそろえる仕事です。</p>
+<div class="tablewrap"><table><thead><tr><th>仕事</th><th>中心になる作業</th><th>完成物</th></tr></thead><tbody>
+<tr><td>文章作成（商品紹介文）</td><td>1商品の魅力と注意を文章にする</td><td>商品説明文</td></tr>
+<tr><td>事務・情報整理</td><td>複数商品の項目をそろえ、抜けを見つける</td><td>一覧表＋確認事項</td></tr>
+</tbody></table></div>
+<p>5商品を一括で整理しても、内容の確認は5件とも必要です。「まとめて処理する」と「確認を省く」は別です。</p>
+<figure class="visual compare actual-compare"><div><b>文章作成（商品紹介文）</b><div class="paper"><small>商品資料</small><span>朝のメモ帳</span><span>方眼40ページ</span><span>深い緑の表紙</span></div><i>↓</i><div class="paper final-paper"><small>完成物</small><strong>商品紹介文</strong><span>1商品の特徴を文章にする</span></div></div><div><b>事務・情報整理</b><div class="paper"><small>5商品の資料</small><span>P-001 バジル</span><span>P-002 ハーブティー</span><span>P-003 木のスプーン</span></div><i>↓</i><div class="paper final-paper"><small>完成物</small><strong>5列の完成表</strong><span>確認事項も商品ごとに残す</span></div></div><figcaption>1商品を文章にする仕事と、複数商品を同じ列へそろえる仕事では、完成物が違います。</figcaption></figure>
+<h2 id="本編-5商品を-同じ手順で自動整理する">本編：5商品を、同じ手順で自動整理する</h2>
+<h3 id="自動化は-同じ手順を-次の資料でも使える形-にすること">自動化は「同じ手順を、次の資料でも使える形」にすること</h3>
+<p>商品が5件追加されるたびに、2つの資料を見比べて列を作ると、IDの取り違えや確認漏れが起きやすくなります。</p>
+<p>この実践キットは、入力資料を替えても同じ順で処理します。</p>
+<ol>
+<li>商品一覧と事実資料を読む</li>
+<li>商品IDで2つの資料を結ぶ</li>
+<li>確認済み内容を固定した5列へそろえる</li>
+<li>空欄と未確認項目を確認リストへ分ける</li>
+<li>前回を残し、別の実行結果フォルダへ保存する</li>
+</ol>
+<p>文章や事実は作りません。元資料を決めた列へ移し、足りない所を見える形にする処理です。</p>
+<figure class="visual file-flow"><div class="file-group"><b>入力例</b><code>01-products.csv</code><small>商品名の一覧</small><code>02-facts.md</code><small>商品の事実メモ</small></div><i>商品IDで<br>自動結合</i><div class="split-output"><span><b>固定5列</b><code>提出用_商品一覧.csv</code></span><span><b>不足を分ける</b><code>確認リスト.csv</code></span><span><b>別runへ保存</b><code>実行結果.md</code></span></div><i>→</i><div class="human-check"><b>人が<br>全行照合</b><span>5商品</span><span>確認15件</span></div><figcaption>入力ファイルは変更せず、実行ごとに別のrunフォルダへ3ファイルを保存します。</figcaption></figure>
+<h3 id="AI自動化-実践キットを保存する">AI自動化 実践キットを保存する</h3>
+<p><a href="assets/AI自動化_実践キット.zip">AI自動化 実践キットを保存</a></p>
+<p>実機確認した環境は、2026年10月30日時点のApple Silicon搭載Mac、macOS 27.0.1、Python 3.9.6です。</p>
+<p>自動整理の処理は、Python 3の標準ライブラリという最初から入っている機能だけで動きます。処理のために追加のPythonパッケージ、APIキー、従量課金の連携は使いません。ChatGPTとCodexは、このあと説明する公式手順で準備します。Windows、Linux、Intel Macは実機未確認です。</p>
+<h3 id="保存したZIPを開く">保存したZIPを開く</h3>
+<ol>
+<li>Finderで、ZIPを保存した場所を開く</li>
+<li><code>AI自動化_実践キット.zip</code>をダブルクリックする</li>
+<li>新しくできた<code>AI自動化_実践キット</code>フォルダを開く</li>
+<li>最初に<code>README.md</code>を開き、全体の流れを読む</li>
+</ol>
+<p>最初の完成見本は、次の順にフォルダを開くと見つかります。</p>
+<p><code>AI自動化_実践キット</code> → <code>出力見本</code> → <code>run-20261030-235033-764921</code> → <code>提出用_商品一覧.csv</code></p>
+<p>同じrunフォルダには、<code>確認リスト.csv</code>と<code>実行結果.md</code>も入っています。</p>
+<h3 id="Codexを初めて使う方へ">Codexを初めて使う方へ</h3>
+<p>Codexは、ChatGPTデスクトップアプリのメニューから選べる作業画面です。この特典では、選んだフォルダのファイルを読み、自然な文で自動整理を頼むために使います。</p>
+<p><a href="https://learn.chatgpt.com/docs/quickstart">OpenAI公式：ChatGPT／Codexクイックスタート</a></p>
+<p>Macでは、次の順に始めます。</p>
+<ol>
+<li>公式クイックスタートからChatGPTデスクトップアプリを入れる</li>
+<li>ChatGPTアカウントでサインインする</li>
+<li>作業場所として、展開した<code>AI自動化_実践キット</code>フォルダを開く</li>
+<li>ChatGPTの選択メニューから<code>Codex</code>を選び、新しいチャットを開く</li>
+</ol>
+<p>この実践キットで実測したのは、Apple Silicon搭載Macでのローカル自動整理です。デスクトップアプリの表示、利用可否、上限は、現在の公式案内と自分のアカウント画面で確認してください。現在の契約に含まれるとは断定しません。</p>
+<h3 id="入力するのは2ファイル">入力するのは2ファイル</h3>
+<p>キット内の<code>入力例</code>フォルダを右クリックし、「複製」を選びます。複製したフォルダ名を<code>今回の入力</code>などへ変え、中の2ファイルを今回の依頼資料へ差し替えます。</p>
+<h4 id="01-products-csv"><code>01-products.csv</code></h4>
+<p>商品IDと商品名の一覧です。商品IDは、2つの資料で同じ商品を結ぶ番号です。</p>
+<h4 id="02-facts-md"><code>02-facts.md</code></h4>
+<p>商品ID、確認済み内容、未確認項目の表です。資料で確認できない寸法や条件は、未確認項目へ残します。</p>
+<p>元の入力例は架空の5商品です。実際の依頼資料へ替える前に、依頼主の情報管理ルールと、Codexへ渡してよい範囲を確認します。</p>
+<p>複製した入力フォルダをFinderで選びます。Optionキーを押しながら右クリックし、「“今回の入力”のパス名をコピー」を選ぶと、フォルダの場所をコピーできます。表示名はmacOSの版によって少し違う場合があります。</p>
+<h3 id="Codexへ自然な文で頼む">Codexへ自然な文で頼む</h3>
+<p>キット内の <code>Codexへ渡す依頼文.txt</code> を開きます。</p>
+<p>「ここへ、差し替えた入力フォルダの場所を入れる」の部分だけを変え、全文をCodexへ渡します。Pythonの命令を覚える必要はありません。</p>
+<p>CodexはREADMEを読み、ローカルで自動整理を1回実行します。入力ファイルは変更せず、キット内の <code>outputs/run-日時/</code> へ新しい結果を保存します。</p>
+<p>同じ入力でもう1度実行すると、別のrunフォルダができます。前回の結果は残ります。</p>
+<figure class="visual track compact"><div class="track-row"><div class="node">入力フォルダを選ぶ</div><div class="node">パス名をコピー</div><div class="node">依頼文へ貼る</div><div class="node">Codexへ渡す</div><div class="node">新しいrunを開く</div></div><figcaption>Pythonの命令を入力せず、自然な文で頼みます。</figcaption></figure>
+<h3 id="自動で出る3ファイル">自動で出る3ファイル</h3>
+<h4 id="提出用-商品一覧-csv"><code>提出用_商品一覧.csv</code></h4>
+<p>商品ID、商品名、確認済み内容、確認事項、根拠の5列です。</p>
+<div class="tablewrap"><table><thead><tr><th>商品ID</th><th>商品名</th><th>確認済み内容</th><th>確認事項</th><th>根拠</th></tr></thead><tbody>
+<tr><td>P-001</td><td>窓辺のバジル栽培セット</td><td>鉢1個・培養土1袋・種1袋・育て方カード1枚。室内向け。日当たりのよい窓辺で育てる。</td><td>鉢の実寸／種の量／返品条件</td><td>2つの入力ファイルのP-001</td></tr>
+<tr><td>P-002</td><td>ハーブティー入門セット</td><td>カモミール・ミント・レモングラスの3袋。各袋の内容量は商品台帳で確認が必要。</td><td>各袋の内容量／賞味期限／保存方法</td><td>2つの入力ファイルのP-002</td></tr>
+<tr><td>P-003</td><td>木のスプーン2本組</td><td>天然木のスプーン2本。食器用。手洗いを案内する。</td><td>樹種／全長／食洗機の可否</td><td>2つの入力ファイルのP-003</td></tr>
+<tr><td>P-004</td><td>コットン巾着</td><td>生成り色の巾着1枚。小物入れ用。</td><td>寸法／生地の混率／洗濯方法</td><td>2つの入力ファイルのP-004</td></tr>
+<tr><td>P-005</td><td>朝のメモ帳</td><td>方眼40ページ。1冊。表紙は深い緑。</td><td>本体寸法／紙の種類／製造国</td><td>2つの入力ファイルのP-005</td></tr>
+</tbody></table></div>
+<h4 id="確認リスト-csv"><code>確認リスト.csv</code></h4>
+<p>依頼主へ確認する項目を、商品ごとに分けた表です。入力例では5商品から15件が出ます。</p>
+<h4 id="実行結果-md"><code>実行結果.md</code></h4>
+<p>処理した商品数、確認事項の件数、自動で行ったこと、人が確認すること、入力ファイルの確認値を記録します。</p>
+<p>CSVは、日本語が文字化けしにくいUTF-8という保存方式です。Excelなどで開いたときに日本語を読みやすくする印も付いています。</p>
+<figure class="visual output-files"><div><code>提出用_商品一覧.csv</code><b>5行 × 5列</b><span>P-001〜P-005</span></div><div><code>確認リスト.csv</code><b>15件</b><span>依頼主へ確認する項目</span></div><div><code>実行結果.md</code><b>商品数 5件</b><span>自動処理と人の確認</span></div><figcaption>実在する出力見本の件数です。</figcaption></figure>
+<h3 id="自動になる所-人が行う所">自動になる所、人が行う所</h3>
+<p><strong>自動になる所</strong></p>
+<ul>
+<li>商品IDで2資料を結ぶ</li>
+<li>固定した5列へそろえる</li>
+<li>空欄と未確認項目を確認リストへ分ける</li>
+<li>前回を残し、別のrunフォルダへ保存する</li>
+</ul>
+<p><strong>人が行う所</strong></p>
+<ul>
+<li>5件すべてを元資料と見比べる</li>
+<li>確認事項を依頼主へ聞く</li>
+<li>回答を元資料へ反映する</li>
+<li>契約条件に合う形式で納品する</li>
+</ul>
+<p>定期起動や顧客への自動送信は、このキットの範囲に含みません。依頼主の確認を飛ばさず、繰り返し作業の列合わせと不足確認を速くする仕組みです。</p>
+<h3 id="新しい依頼でもう1度使う">新しい依頼でもう1度使う</h3>
+<p>次の依頼では、複製した入力フォルダの2ファイルだけを差し替えます。同じ依頼文をCodexへ渡すと、新しいrunフォルダへ結果が出ます。</p>
+<p>依頼主が求める列が違う場合は、勝手に列を変えません。必要な列と完成例を確認し、Codexへスクリプトの変更を頼みます。変更後は架空資料で試し、列、欠落、前回出力の保持を確認してから実際の資料へ進みます。</p>
+<h3 id="練習した時間を記録する">練習した時間を記録する</h3>
+<p>応募前に、自分が実際にかかった時間を残します。決まった分数を目標にするのではなく、見積もりと期限を考える材料にします。</p>
+<div class="tablewrap"><table><thead><tr><th>記録する所</th><th>自分の時間</th></tr></thead><tbody>
+<tr><td>入力2ファイルの準備</td><td>分</td></tr>
+<tr><td>自動整理の実行</td><td>分</td></tr>
+<tr><td>5商品の照合と修正</td><td>分</td></tr>
+<tr><td>納品ファイルの確認</td><td>分</td></tr>
+</tbody></table></div>
+<p>資料の量や不足情報によって作業時間は変わります。この練習の時間だけで、別の依頼にかかる時間を断定しません。</p><h2 id="実践2-会議メモを-次に使える形へ整える">実践2：会議メモを、次に使える形へ整える</h2>
+<h3 id="会議メモ整理も-有償の事務作業です">会議メモ整理も、有償の事務作業です</h3>
+<p>依頼主が会議後に知りたいのは、話した内容を全部並べた文章だけではありません。</p>
+<p>何が決まり、誰が、いつまでに動くのか。まだ決まっていないことは何か。</p>
+<p>そこが分かる資料へ整えると、会議後の連絡や進行に使えます。</p>
+<figure class="visual visual-scene meeting-scene"><img src="assets/display/meeting-notes-handoff-v2.png" alt="ばらばらな会議メモを、決定・担当・期限・未決定へ整理して依頼主と確認する場面"><div class="meeting-map"><span>走り書き</span><i>→</i><b>決定</b><b>担当</b><b>期限</b><b>未決定</b><i>→</i><strong>担当者が次の作業へ</strong></div><figcaption>会議の内容を、次に動ける4区画へ整理します。画像はイメージです</figcaption></figure>
+<h3 id="架空の入力メモ">架空の入力メモ</h3>
+<div class="codebox"><button class="copy" type="button">コピー</button><pre><code data-lang="text">10月30日　冬のハーブ教室の準備会議
+11月9日10時開始で進める
+定員はまだ決めていない
+告知画像の初稿はXさん、11月2日まで
+申込フォームはYさんが11月3日までに作る
+持ち物は筆記用具でよいか、講師へ確認が必要
+次回確認は11月4日15時</code></pre></div>
+<h3 id="AIへ送る指示">AIへ送る指示</h3>
+<div class="codebox"><button class="copy" type="button">コピー</button><pre><code data-lang="text">次の架空の会議メモを、会議後に仕事で使える形へ整理してください。
+
+【分ける項目】
+・決まったこと
+・担当と期限
+・未決定、確認が必要なこと
+・次回確認
+
+入力にない担当、期限、定員、持ち物は足さないでください。
+人名は入力どおりXさん、Yさんと書いてください。</code></pre></div>
+<h3 id="完成例">完成例</h3>
+<p><strong>決まったこと</strong></p>
+<ul>
+<li>冬のハーブ教室は11月9日10時開始で進める</li>
+</ul>
+<p><strong>担当と期限</strong></p>
+<div class="tablewrap"><table><thead><tr><th>作業</th><th>担当</th><th>期限</th></tr></thead><tbody>
+<tr><td>告知画像の初稿</td><td>Xさん</td><td>11月2日</td></tr>
+<tr><td>申込フォームの作成</td><td>Yさん</td><td>11月3日</td></tr>
+</tbody></table></div>
+<p><strong>未決定・確認が必要</strong></p>
+<ul>
+<li>定員</li>
+<li>持ち物を筆記用具にしてよいか、講師へ確認</li>
+</ul>
+<p><strong>次回確認</strong></p>
+<ul>
+<li>11月4日15時</li>
+</ul>
+<p>この完成例は架空です。元メモにない担当や期限は足していません。</p>
+<h3 id="納品前の確認">納品前の確認</h3>
+<ul>
+<li>日付と時刻が元メモと同じか</li>
+<li>Xさん、Yさんの担当が入れ替わっていないか</li>
+<li>未決定の定員を、決定として書いていないか</li>
+<li>確認が必要な持ち物を断定していないか</li>
+<li>依頼主が指定した形式で保存できているか</li>
+</ul>
+<p>会議の録音や実名をAIへ渡す場合は、依頼主のルール、参加者への案内、利用サービスの条件を確認します。この練習では、架空メモだけを使います。</p>
+<h2 id="仕事を探して-条件を読む">仕事を探して、条件を読む</h2>
+<h3 id="検索する言葉">検索する言葉</h3>
+<ul>
+<li>商品データ 整理</li>
+<li>EC 商品登録 補助</li>
+<li>オンラインアシスタント 情報整理</li>
+<li>会議メモ 議事録 整理</li>
+<li>データ入力 AI 利用可</li>
+</ul>
+<p>検索結果の件数や表示価格は変わります。掲載があることは、初心者でも受注できる証明や相場の証明ではありません。</p>
+<h3 id="架空の募集文から-8項目を取り出す">架空の募集文から、8項目を取り出す</h3>
+<blockquote>商品情報5件を、指定の5列へ整理する方を募集します。商品CSVと事実メモを支給します。納品はCSV。初稿は3日後、修正は1回。AIは使用前に相談してください。顧客情報は含みません。報酬は応募前の条件欄を確認してください。</blockquote>
+<p>この募集は練習用の架空例です。</p>
+<p>取り出す項目は、仕事、件数、材料、必要な列、形式、期限、修正、AI条件です。</p>
+<div class="tablewrap"><table><thead><tr><th>項目</th><th>この募集の内容</th></tr></thead><tbody>
+<tr><td>仕事</td><td>商品情報の整理</td></tr>
+<tr><td>件数</td><td>5件</td></tr>
+<tr><td>材料</td><td>商品CSV、事実メモ</td></tr>
+<tr><td>必要な列</td><td>指定の5列</td></tr>
+<tr><td>形式</td><td>CSV</td></tr>
+<tr><td>初稿</td><td>3日後</td></tr>
+<tr><td>修正</td><td>1回</td></tr>
+<tr><td>AI条件</td><td>使用前に相談</td></tr>
+</tbody></table></div>
+<p>報酬額だけで決めず、件数、列数、元資料の状態、修正、連絡、秘密情報の扱いを見ます。</p>
+<h3 id="応募文の架空例">応募文の架空例</h3>
+<div class="codebox"><button class="copy" type="button">コピー</button><pre><code data-lang="text">はじめまして。商品情報5件を指定の列へ整理するお仕事に応募します。
+
+自主制作の架空見本として、5商品をCSVへ整理した例があります。元資料との照合、未確認項目の切り分け、CSVでの納品まで対応できます。
+
+Codexと自動整理キットを使い、商品IDで資料を結びます。商品名、数字、仕様、確認事項は元資料と見比べます。AIの利用可否と、AIへ渡せない情報があれば着手前に確認します。
+
+初稿期限、指定の5列、修正1回を確認しました。
+確認したい点は、提出用5列の正式名と、CSVを開く表計算ソフトです。</code></pre></div>
+<p>実際に送る前に、経験や実績を盛っていないかを読み返します。自主制作の見本は、その事実が分かる書き方にします。</p>
+<h3 id="応募前の判定">応募前の判定</h3>
+<p>次の5点がそろった仕事から検討します。</p>
+<ol>
+<li>募集で求める列と形式を、見本で再現できる</li>
+<li>1行を直し、もう一度実行して別の出力へ残せる</li>
+<li>初稿期限、連絡方法、修正回数に対応できる</li>
+<li>依頼主が指定する形式で納品できる</li>
+<li>AI利用と秘密情報の条件を守れる</li>
+</ol>
+<p>分からない条件は、応募前に質問します。練習回数だけで受注できるとは判断しません。</p>
+<h3 id="条件を合意する">条件を合意する</h3>
+<p>着手前に、次を文章で残します。</p>
+<ul>
+<li>何件を、何列へ整理するか</li>
+<li>どの資料を正とするか</li>
+<li>AIを使ってよいか、渡してはいけない情報は何か</li>
+<li>初稿と最終納品の期限</li>
+<li>修正回数と、追加作業の扱い</li>
+<li>CSV、XLSX（Excel形式のファイル）、文書などの納品形式</li>
+<li>報酬、手数料、支払条件</li>
+</ul>
+<p>価格は、件数、列数、元資料の状態、確認量、修正、期限、使用するサービスの手数料などで変わります。この特典では平均相場を断定しません。</p>
+<h2 id="初稿・修正・納品">初稿・修正・納品</h2>
+<h3 id="初稿を渡すとき">初稿を渡すとき</h3>
+<div class="codebox"><button class="copy" type="button">コピー</button><pre><code data-lang="text">商品情報5件の初稿を共有します。
+
+納品候補：提出用_商品一覧_初稿.csv
+確認事項：確認リスト.csvへまとめています。
+
+P-001〜P-005の5件、指定の5列で作成しました。
+未確認項目は推測せず、確認事項へ残しています。
+
+内容をご確認いただき、合意した修正範囲でご連絡ください。</code></pre></div>
+<h3 id="修正を受けたとき">修正を受けたとき</h3>
+<p>修正内容を、対象ID、変更前、変更後、理由に分けます。</p>
+<p>「全体をいい感じに」など範囲が分からない依頼は、勝手に解釈せず、対象行と希望を確認します。追加の商品や列は、合意した作業に含むか確認します。</p>
+<h3 id="納品するとき">納品するとき</h3>
+<div class="codebox"><button class="copy" type="button">コピー</button><pre><code data-lang="text">修正内容を反映し、最終版を納品します。
+
+納品物：商品一覧_最終.csv
+件数：5件
+列：商品ID、商品名、確認済み内容、確認事項、根拠
+
+初稿から変更した箇所は、P-003の食洗機表記です。
+未確認事項は確認事項の列へ残しています。
+
+ファイルを開き、5行×5列と日本語表示を確認済みです。</code></pre></div>
+<p>納品後、依頼主の検収を待ちます。修正が来たら契約範囲を確認し、必要な対応を行います。検収後に、利用サービスの流れに沿って報酬を受け取ります。</p>
+<h2 id="今日の行動">今日の行動</h2>
+<p>今日は実践キットを保存して展開し、<code>出力見本/run-20261030-235033-764921/提出用_商品一覧.csv</code>を開きます。P-003の1行だけを、入力例の2ファイルと見比べてください。</p>
+<p>次回以降は、入力例で自動整理を実行し、別の商品資料へ入れ替えます。会議メモの整理、募集条件の読み取り、応募文、初稿、修正、納品は、そのあと順番に進めます。</p>
+<p>依頼主が次の仕事に使える表へ整い、元資料との違いを説明できたら完成です。</p><details class="appendix"><summary>付録：ChatGPTで商品説明の下書きを見る（任意）</summary><p>実践キットは、確認済み内容をそのまま5列へ整理します。商品説明文は作りません。</p>
+<p>ここからは、同じ架空資料をChatGPTへ渡し、商品説明の下書きを作る任意体験です。</p>
+<p>自動整理キットの5列は「商品ID／商品名／確認済み内容／確認事項／根拠」。</p>
+<p>ChatGPT体験の5列は「商品ID／商品名／説明の下書き／内容・仕様／確認事項」です。用途が違うため、同じ5列として混ぜません。</p>
+<h3 id="先に完成した形を見てください">先に完成した形を見てください</h3>
+<p>完成表は、商品ID、商品名、説明の下書き、内容・仕様、確認事項の5列です。</p>
+<div class="tablewrap"><table><thead><tr><th>商品ID</th><th>商品名</th><th>説明の下書き</th><th>内容・仕様</th><th>確認事項</th></tr></thead><tbody>
+<tr><td>P-001</td><td>窓辺のバジル栽培セット</td><td>室内でバジルを育て始めるためのセットです。</td><td>鉢1個、培養土1袋、種1袋、育て方カード1枚</td><td>鉢の実寸、種の量、返品条件</td></tr>
+<tr><td>P-002</td><td>ハーブティー入門セット</td><td>カモミール、ミント、レモングラスを試せるセットです。</td><td>3袋。各袋の内容量は未確認</td><td>内容量、賞味期限、保存方法</td></tr>
+<tr><td>P-003</td><td>木のスプーン2本組</td><td>天然木のスプーン2本組です。</td><td>食器用。手洗いを案内</td><td>樹種、全長、食洗機の可否</td></tr>
+<tr><td>P-004</td><td>コットン巾着</td><td>小物を入れられる生成り色の巾着です。</td><td>1枚</td><td>寸法、生地の混率、洗濯方法</td></tr>
+<tr><td>P-005</td><td>朝のメモ帳</td><td>深い緑の表紙を使った方眼メモ帳です。</td><td>1冊、40ページ</td><td>本体寸法、紙の種類、製造国</td></tr>
+</tbody></table></div>
+<p>この表は架空の練習例です。</p>
+<p>「P-003は天然木だから食洗機で使える」のような推測は入れません。資料にないことは確認事項へ残します。</p>
+<p>依頼主は、この表を見て不足情報を確認し、商品登録へ進めます。完成表の利用場面まで見えると、何のために整えるのか分かります。</p>
+<figure class="visual data-use"><div class="mini-table"><b>完成表の5列</b><span>商品ID</span><span>商品名</span><span>確認済み内容</span><span>確認事項</span><span>根拠</span></div><i>→</i><div><b>店主が使う</b><strong>商品登録前の確認</strong><span>不足を埋めてから登録</span></div><figcaption>完成表は、商品登録の元資料として使います。</figcaption></figure>
+<h3 id="AIへ渡す4列の練習CSV">AIへ渡す4列の練習CSV</h3>
+<p>CSVは、ExcelやGoogleスプレッドシートなどで開けます。</p>
+<p>今回の入力は、商品ID、商品名、確認済み内容、未確認項目の4列です。</p>
+<div class="codebox"><button class="copy" type="button">コピー</button><pre><code data-lang="csv">商品ID,商品名,確認済み内容,未確認項目
+P-001,窓辺のバジル栽培セット,&quot;鉢1個・培養土1袋・種1袋・育て方カード1枚。室内向け。日当たりのよい窓辺で育てる。&quot;,鉢の実寸・種の量・返品条件
+P-002,ハーブティー入門セット,&quot;カモミール・ミント・レモングラスの3袋。各袋の内容量は商品台帳で確認が必要。&quot;,各袋の内容量・賞味期限・保存方法
+P-003,木のスプーン2本組,&quot;天然木のスプーン2本。食器用。手洗いを案内する。&quot;,樹種・全長・食洗機の可否
+P-004,コットン巾着,&quot;生成り色の巾着1枚。小物入れ用。&quot;,寸法・生地の混率・洗濯方法
+P-005,朝のメモ帳,&quot;方眼40ページ。1冊。表紙は深い緑。&quot;,本体寸法・紙の種類・製造国</code></pre></div>
+<p><a href="assets/practice-products.csv">練習CSVを保存</a></p>
+<figure class="visual column-map"><div><b>入力 4列</b><span>商品ID</span><span>商品名</span><span>確認済み内容</span><span>未確認項目</span></div><i>AIが下書き<br>人が照合</i><div><b>出力 5列</b><span>商品ID</span><span>商品名</span><strong>説明の下書き</strong><span>内容・仕様</span><strong>確認事項</strong></div><figcaption>任意体験では、説明の下書きを加え、未確認項目を確認事項へ移します。</figcaption></figure>
+<h3 id="ChatGPTで一括下書きする">ChatGPTで一括下書きする</h3>
+<p>ChatGPTで新しいチャットを開きます。</p>
+<p>CSVを添付できる場合はファイルを付け、次の指示を送ります。添付を使わない場合は、CSVの全行を指示文の下へ貼ります。</p>
+<div class="codebox"><button class="copy" type="button">コピー</button><pre><code data-lang="text">架空の商品5件を、商品管理の下書きへ整理してください。
+
+【守ること】
+・確認済み内容だけを使う
+・未確認項目は推測で埋めず、確認事項へ残す
 ・商品ID、商品名、説明の下書き、内容・仕様、確認事項の5列で出す
 ・効能、品質、素材、サイズ、産地、価格など、資料にない情報を足さない
-・説明は短く、難しい言葉を使わない
+・5商品を省略しない
 ・最後にCSV形式でも出す
 
-【入力CSV】
-商品ID,商品名,確認済み内容,未確認項目
-P-001,窓辺のバジル栽培セット,"鉢1個・培養土1袋・種1袋・育て方カード1枚。室内向け。日当たりのよい窓辺で育てる。",鉢の実寸・種の量・返品条件
-P-002,ハーブティー入門セット,"カモミール・ミント・レモングラスの3袋。各袋の内容量は商品台帳で確認が必要。",各袋の内容量・賞味期限・保存方法
-P-003,木のスプーン2本組,"天然木のスプーン2本。食器用。手洗いを案内する。",樹種・全長・食洗機の可否
-P-004,コットン巾着,"生成り色の巾着1枚。小物入れ用。",寸法・生地の混率・洗濯方法
-P-005,朝のメモ帳,"方眼40ページ。1冊。表紙は深い緑。",本体寸法・紙の種類・製造国</div></details><p>この練習では架空資料だけを使います。AIへ渡した内容は利用中のサービスで扱われるため、実際の個人情報や社外秘資料は勝手に入れません。</p><div class="keep-group"><h3>返ってきたら、4か所だけ見る</h3><ol class="steps"><li>5件そろっている</li><li>商品IDと商品名が元の行と合っている</li><li>確認済みの内容が抜けていない</li><li>未確認の内容を言い切っていない</li></ol></div></section>
-<section class="card"><h2>間違いを1件、直してみます。</h2><p>木のスプーンは、食洗機に対応しているか未確認です。P-003だけを直し、ほかの4件は変えません。</p><div class="before-after"><article class="bad"><b>修正前 ×</b><p>天然木のスプーン2本組です。食洗機にも対応しています。</p></article><article class="good"><b>修正後 ○</b><p>天然木で作った食器用スプーンの2本組です。使用後は手洗いします。食洗機の可否は確認事項へ残します。</p></article></div><button class="copy" data-copy="repair">修正文をコピー</button><span class="copy-status" role="status"></span><p class="copy-help">コピーできない時は、全文を開いて長押しします。</p><details class="prompt-details"><summary>修正文の全文を見る</summary><div class="prompt" id="repair">P-003を修正してください。
-食洗機に対応しているかは未確認です。
-「食洗機にも対応しています」を削除し、確認事項へ「食洗機の可否」を残してください。
-ほかの4件は変更しないでください。</div></details></section>
-<section class="card"><h2>パソコンでは、フォルダごとCodexへ頼めます。</h2><p>目的は、3つの架空ファイルをCodexに読ませ、`outputs`へ下書き・確認事項・5列CSVを作ることです。</p><div class="pc-files"><div class="file">01-products.csv<br><small>商品IDと商品名</small></div><div class="file">02-facts.md<br><small>確認済み／未確認</small></div><div class="file">03-task.txt<br><small>出力条件と安全範囲</small></div></div><a class="download" href="assets/AI自動化_PC練習セット.zip" download>PC練習セットを保存</a><button class="copy" data-copy="pcprompt">Codexへの全文をコピー</button><span class="copy-status" role="status"></span><p class="copy-help">コピーできない時は、全文を開いて長押しします。</p><details class="prompt-details"><summary>Codexへ送る全文を見る</summary><div class="prompt" id="pcprompt">この練習フォルダにある3ファイルを読んでください。
-
-架空の商品5件について、確認済みの事実だけで商品説明の下書きを作ってください。未確認の項目は推測せず、確認事項へ残してください。商品ID、商品名、説明の下書き、内容・仕様、確認事項の5列へそろえてください。
-
-outputsフォルダに、商品説明_下書き.md、確認事項.md、商品説明_下書き.csvを新しく作ってください。
-
-作成後は、商品IDが5件そろうか、元資料にない内容がないか、未確認項目を断定していないかを照合し、結果を報告してください。
-
-顧客へのメール送信、Web公開、外部サービスへの登録はしないでください。追加のAPIキーや従量課金の連携は使わないでください。入力ファイルは変更せず、出力はoutputsフォルダだけへ保存してください。</div></details><p>Codexが3ファイルを実際に読みます。単なる並べ替えプログラムではなく、確認済み事実からAIが文章を下書きする練習です。</p><p class="note">Codexへ送る指示や読ませる情報は、利用中のAIサービスの条件に従います。このセットは架空資料だけです。</p></section>
-<section class="card"><h2>完成チェック</h2><ul class="checklist"><li>スマホ：5件の下書きと確認事項を、見直せるメモへ保存した</li><li>パソコン：5列のCSVを保存し、表として開いた</li><li>元資料と5件すべて照合した</li><li>未確認項目を断定していない</li><li>顧客への送信や公開は、人が判断する前に行っていない</li></ul><p>問い合わせ返信にも同じ考え方を使えます。問い合わせと確認済み事実を分け、未確認の空席は言い切らず確認事項へ残します。</p></section>
-<footer class="footer"><a class="download" href="assets/AI自動化ワーク_保存版.pdf" download>保存版PDFを保存</a><a class="back" href="https://yuuyann0318.github.io/ai-fukugyo-bonus-hub/">5特典一覧へ戻る</a></footer></main><script>async function copyPrompt(b){const target=document.getElementById(b.dataset.copy);const text=target.textContent;const status=b.nextElementSibling;try{if(!navigator.clipboard||!navigator.clipboard.writeText)throw new Error('clipboard unavailable');await navigator.clipboard.writeText(text);b.textContent='コピーしました';status.textContent='全文をコピーしました。'}catch(error){const details=target.closest('details');if(details)details.open=true;const range=document.createRange();range.selectNodeContents(target);const selection=getSelection();selection.removeAllRanges();selection.addRange(range);target.scrollIntoView({block:'center'});b.textContent='全文を表示しました';status.textContent='自動コピーできませんでした。選択した全文を長押しし、「コピー」を選んでください。'}}document.querySelectorAll('[data-copy]').forEach(b=>b.onclick=()=>copyPrompt(b));</script></body></html>
+添付したCSVを入力として使ってください。</code></pre></div>
+<p>ChatGPTのファイル添付は、利用プラン、設定、端末によって表示や上限が変わります。添付できないときは、今回の短い架空CSVを本文へ貼って進めます。</p>
+<p>実際の仕事では、依頼主の許可なく、氏名、住所、電話番号、メール、注文番号、社外秘の資料をAIへ渡しません。利用するAIサービスのデータ条件も確認します。</p>
+<figure class="visual ui-guide"><div><b>ChatGPTで開く</b><span>① ファイルを追加</span><span>② 指示文を送る</span><span>③ 5列を照合</span></div><figcaption>画面の名称や位置は変わる場合があります。2026年10月30日時点の公式案内を確認しています。</figcaption></figure>
+<h3 id="返ってきたら-5件とも確認する">返ってきたら、5件とも確認する</h3>
+<p>見る場所は5つです。</p>
+<ol>
+<li>P-001〜P-005が全部あるか</li>
+<li>商品名と内容・仕様が元資料と同じか</li>
+<li>未確認項目が確認事項に残っているか</li>
+<li>資料にない効果、素材、サイズ、価格を足していないか</li>
+<li>5列の順番とCSVの形がそろっているか</li>
+</ol>
+<p>1件でも違えば、その場所を指定して直します。</p>
+<h4 id="修正前">修正前</h4>
+<blockquote>木のスプーン2本組。食洗機でも使えます。</blockquote>
+<p>「食洗機の可否」は未確認です。使えると断定できません。</p>
+<h4 id="修正依頼">修正依頼</h4>
+<div class="codebox"><button class="copy" type="button">コピー</button><pre><code data-lang="text">P-003だけ修正してください。
+「食洗機でも使えます」は資料にないため削除してください。
+食洗機の可否は確認事項へ残してください。
+P-001、P-002、P-004、P-005は変更しないでください。
+修正後の5列をもう1度出してください。</code></pre></div>
+<h4 id="修正後">修正後</h4>
+<blockquote>内容・仕様：天然木のスプーン2本。食器用。手洗いを案内。  </blockquote>
+<blockquote>確認事項：樹種、全長、食洗機の可否</blockquote>
+<p>直したあとも、P-003の元資料へ戻って見比べます。</p>
+<figure class="visual truth-compare"><div class="bad"><b>資料にない追加</b><strong>食洗機でも使える</strong></div><div class="good"><b>確認へ残す</b><strong>未確認：食洗機の可否</strong></div><p><b>元資料：</b>「手洗いを案内する」まで</p><figcaption>分からない情報を推測で埋めず、依頼主への確認事項へ残します。</figcaption></figure>
+<h3 id="保存して-開き直す">保存して、開き直す</h3>
+<p>スマホでは、5件の表と確認事項をメモへコピーします。P-001〜P-005が読めるか、保存後に開き直します。</p>
+<p>パソコンでは、CSVを保存し、ExcelやGoogleスプレッドシートなどで開きます。</p>
+<p>次を確認できたら、商品表の練習は完成です。</p>
+<ul>
+<li>5行がある</li>
+<li>5列に分かれている</li>
+<li>日本語が崩れていない</li>
+<li>確認事項が残っている</li>
+<li>元の練習CSVも別に残っている</li>
+</ul>
+<p>「AIが回答した」で終わらず、「保存した表を開き直せた」まで進めます。</p></details></section></main><script>
+document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',async()=>{let t=b.parentElement.querySelector('code').innerText;await navigator.clipboard.writeText(t);b.textContent='コピーしました';setTimeout(()=>b.textContent='コピー',1600)}));
+if(new URLSearchParams(location.search).has('pdf'))document.querySelectorAll('details').forEach(d=>d.open=true);
+</script></body></html>
