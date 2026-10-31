@@ -1,0 +1,20 @@
+@page{size:A4;margin:14mm 13mm 15mm}
+*{box-shadow:none!important}
+html,body{background:#fff!important;color:#17201f!important;font-size:11pt;line-height:1.5}
+.wrap{width:100%!important;max-width:none!important}
+.skip,.actions,#print-button,.copy-button,.build-button,.copy-status,.sources{display:none!important}
+.hero{padding:0}.hero-grid{grid-template-columns:1.05fr .95fr;gap:9mm;align-items:center}.hero h1{font-size:37pt}.lead{font-size:13pt}.hero-image img{border-radius:5mm}.facts{margin-top:7mm}.fact{padding:3.5mm}.fact span{font-size:9pt}
+.section{padding:0;break-before:page}.section h2{font-size:26pt}.section-head{margin-bottom:6mm}.section-head>p:last-child{font-size:11.5pt}
+.automation-loop{grid-template-columns:1fr 7mm 1fr 7mm 1fr 7mm 1fr;margin:6mm 0}.loop-node{padding:4mm}.loop-node b{font-size:13pt}
+.agent-inside{padding:4mm}.agent-inside ol{gap:3mm}.agent-inside li{padding:3mm}
+.repeat-line,.plain-note,.condition,.bridge{padding:4mm;font-size:10pt}.tool-note{gap:4mm}.tool{padding:4mm}
+.work-map{grid-template-columns:1fr 1fr;gap:3mm}.work{break-inside:avoid}.work-head{padding:2.5mm 4mm}.work h3{font-size:12pt}.work-body{padding:2mm 4mm}.work-body p{padding:1mm 0}
+.split-layout{grid-template-columns:1.1fr .9fr;gap:7mm}.fit-meter{gap:2mm}.fit-meter li{padding:3mm;break-inside:avoid}.mini-work{padding:5mm}.mini-work input{border:0;border-bottom:1px solid #fff;border-radius:0;background:transparent}
+.request-parts{gap:3mm}.request-parts article{min-height:0;padding:4mm;break-inside:avoid}.template-box{padding:4mm}.common-flow{margin-top:5mm}
+.example-grid{grid-template-columns:1fr 1fr;gap:5mm}.example-grid img{min-height:0}.before-after,.role-split{gap:3mm}.before-after article,.role-split article{padding:4mm}
+.start-paths{grid-template-columns:1fr 1fr;gap:4mm}.start-paths article{padding:4mm}
+.check-grid{grid-template-columns:1.1fr .9fr;gap:7mm}
+.levels{grid-template-columns:1fr 7mm 1fr 7mm 1fr}.levels article{min-height:0;padding:4mm}.skill-request{padding:4mm}
+.takeaway{grid-template-columns:1fr 1fr;padding:6mm!important;gap:5mm!important}.takeaway label{min-height:29mm;padding:3mm;background:#fff;border-radius:3mm}.takeaway input{min-height:14mm;border:0;border-bottom:1px solid #17201f;border-radius:0;background:transparent}
+.result-box[hidden]{display:none}footer{display:none}
+figure,.work,.tool,.template-box,.before-after article,.role-split article,.start-paths article,.levels article{break-inside:avoid}
